@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: skilldify-apollo-lead-system
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: APOLLO_API_KEY
+        sync: false
+      - key: PUBLIC_BASE_URL
+        sync: false

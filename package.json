@@ -1,0 +1,13 @@
+{
+  "name": "skilldify-apollo-lead-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Skilldify Apollo-powered lead intelligence system",
+  "main": "live-scraping-server.js",
+  "scripts": {
+    "start": "node live-scraping-server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

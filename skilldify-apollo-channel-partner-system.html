@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skilldify Apollo Lead Intelligence</title>
+  <style>
+    :root {
+      --ink:#101418;
+      --muted:#66727d;
+      --line:#dce3ea;
+      --paper:#ffffff;
+      --wash:#f4f7fa;
+      --navy:#101b2d;
+      --blue:#2563eb;
+      --cyan:#08a6c7;
+      --green:#16a36a;
+      --amber:#c17a12;
+      --red:#c24135;
+      --shadow:0 18px 50px rgba(16,24,40,.12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:var(--wash);
+    }
+    button,textarea,input{font:inherit}
+    .shell{min-height:100vh;display:grid;grid-template-columns:320px minmax(0,1fr)}
+    aside{
+      position:sticky;top:0;height:100vh;
+      background:var(--navy);color:#f7fbff;padding:24px 20px;
+      display:flex;flex-direction:column;gap:22px;
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:48px;height:48px;border-radius:8px;
+      background:linear-gradient(135deg,var(--blue),var(--cyan));
+      display:grid;place-items:center;font-weight:900;color:white;
+    }
+    .brand h1{font-size:17px;line-height:1.2;margin:0}
+    .brand span{display:block;color:#b9c7d5;font-size:12px;margin-top:4px}
+    .side-card{
+      border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:14px;
+      background:rgba(255,255,255,.06);color:#cdd8e4;font-size:13px;line-height:1.5;
+    }
+    .side-card strong{display:block;color:#fff;margin-bottom:8px}
+    .steps{display:grid;gap:10px}
+    .step{
+      display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;
+      padding:11px;border-radius:8px;background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .dot{
+      width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
+      background:#223553;color:#dbeafe;font-size:12px;font-weight:800;
+    }
+    .step.active .dot{background:var(--blue);color:#fff}
+    .step.done .dot{background:var(--green);color:#fff}
+    .step strong{display:block;font-size:13px}
+    .step span{display:block;color:#b9c7d5;font-size:12px;margin-top:3px}
+    main{min-width:0}
+    .top{
+      min-height:76px;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);padding:16px 28px;display:flex;
+      align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:5;
+    }
+    .top h2{margin:0;font-size:20px}
+    .top p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .btn{
+      border:1px solid var(--line);background:white;color:var(--ink);
+      border-radius:8px;min-height:42px;padding:10px 14px;display:inline-flex;
+      align-items:center;gap:8px;cursor:pointer;text-decoration:none;white-space:nowrap;
+    }
+    .btn.primary{background:var(--blue);border-color:var(--blue);color:white}
+    .btn.dark{background:var(--navy);border-color:var(--navy);color:white}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .icon{width:18px;height:18px}
+    .content{padding:28px;display:grid;gap:18px}
+    .hero{
+      min-height:260px;color:white;padding:30px;display:grid;align-content:end;
+      background:
+        linear-gradient(90deg,rgba(9,18,32,.94),rgba(9,18,32,.68),rgba(9,18,32,.18)),
+        url("https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1800&q=80");
+      background-size:cover;background-position:center;border-bottom:4px solid var(--cyan);
+    }
+    .hero h2{font-size:clamp(32px,5vw,58px);line-height:1.03;margin:0;max-width:950px;letter-spacing:0}
+    .hero p{font-size:17px;line-height:1.55;color:#eaf3ff;max-width:820px;margin:14px 0 0}
+    .grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:18px}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);overflow:hidden}
+    .panel-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:center}
+    .panel-head h3{margin:0;font-size:16px}
+    .panel-head span{font-size:12px;color:var(--muted)}
+    .panel-body{padding:18px}
+    textarea{
+      width:100%;min-height:410px;resize:vertical;border:1px solid var(--line);border-radius:8px;
+      padding:14px;line-height:1.5;background:#fbfdff;color:#17202a;font-size:13px;
+    }
+    label{display:grid;gap:7px;color:var(--muted);font-size:12px}
+    input{
+      width:100%;border:1px solid var(--line);border-radius:8px;min-height:42px;padding:10px 11px;background:#fff;color:var(--ink);
+    }
+    .form{display:grid;grid-template-columns:1fr 120px;gap:12px;margin-bottom:12px}
+    .status{display:grid;gap:10px}
+    .status-row{
+      display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:center;
+      padding:11px;border:1px solid var(--line);border-radius:8px;background:#fff;
+    }
+    .pulse{width:12px;height:12px;border-radius:50%;background:#cbd5e1}
+    .status-row.active .pulse{background:var(--blue);box-shadow:0 0 0 5px rgba(37,99,235,.12)}
+    .status-row.done .pulse{background:var(--green)}
+    .status-row.error .pulse{background:var(--red)}
+    .status-row strong{font-size:13px}
+    .status-row span{font-size:12px;color:var(--muted)}
+    .metric{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px;min-height:110px}
+    .metric span{color:var(--muted);font-size:12px}
+    .metric strong{display:block;font-size:30px;margin-top:8px}
+    .table-wrap{overflow-x:auto;background:white;border-top:1px solid var(--line)}
+    table{width:100%;border-collapse:collapse;min-width:1120px;font-size:13px}
+    th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{background:#f8fafc;color:#566474;font-size:12px}
+    .fit{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;color:white;font-weight:800}
+    .fit.f5{background:var(--green)}.fit.f4{background:var(--blue)}.fit.f3{background:var(--amber)}.fit.f2,.fit.f1{background:var(--red)}
+    .chip{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:6px 8px;font-size:12px;color:#405061;background:#fff;white-space:nowrap}
+    .notice{border:1px solid #cfe0ff;background:#f2f7ff;color:#244876;border-radius:8px;padding:13px;font-size:13px;line-height:1.5}
+    .source-note{color:var(--muted);font-size:12px;line-height:1.45;margin-top:8px}
+    @media(max-width:1050px){.shell{grid-template-columns:1fr}aside{position:static;height:auto}.grid,.grid.three{grid-template-columns:1fr}.form{grid-template-columns:1fr}}
+    @media(max-width:680px){.top{align-items:flex-start;flex-direction:column;padding:16px}.content{padding:16px}.hero{padding:24px;min-height:340px}.hero h2{font-size:34px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand">
+        <div class="logo">S</div>
+        <div>
+          <h1>Skilldify Lead Intelligence</h1>
+          <span>Apollo-powered CP research system</span>
+        </div>
+      </div>
+      <div class="side-card">
+        <strong>Research objective</strong>
+        Build a verified list of Delhi NCR ultra-luxury real estate channel partners who can sell Rs. 25-50 Cr inventory.
+      </div>
+      <div class="steps" id="sideSteps">
+        <div class="step active"><div class="dot">1</div><div><strong>Paste brief</strong><span>ICP and Apollo search logic</span></div></div>
+        <div class="step"><div class="dot">2</div><div><strong>Run Apollo</strong><span>Multiple narrow searches</span></div></div>
+        <div class="step"><div class="dot">3</div><div><strong>Score fit</strong><span>1-5 ultra-luxury score</span></div></div>
+        <div class="step"><div class="dot">4</div><div><strong>Download</strong><span>CSV for client/sales team</span></div></div>
+      </div>
+      <div class="side-card">
+        <strong>Reality layer</strong>
+        Apollo is the live data source here. Emails can appear instantly. Phone reveal needs a hosted webhook URL and may arrive a few minutes later.
+      </div>
+    </aside>
+
+    <main>
+      <header class="top">
+        <div>
+          <h2>Apollo Channel Partner Research</h2>
+          <p>Script in, Apollo data out, scored and ready to download.</p>
+        </div>
+        <div class="actions">
+          <button class="btn" id="healthBtn">Check Apollo</button>
+          <button class="btn" id="refreshPhonesBtn" disabled>Refresh Phones</button>
+          <button class="btn dark" id="verifiedBtn">Load Verified Partner Data</button>
+          <button class="btn primary" id="downloadBtn" disabled>Download CSV</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="hero">
+          <h2>Find NCR brokers who can sell Rs. 25-50 Cr luxury residences</h2>
+          <p>Skilldify runs focused Apollo searches for ultra-luxury real estate channel partners, deduplicates contacts, scores fit, and exports a client-ready table.</p>
+        </section>
+
+        <section class="grid">
+          <article class="panel">
+            <div class="panel-head"><h3>Research Script</h3><span>Edit or paste your ICP brief</span></div>
+            <div class="panel-body">
+              <textarea id="scriptBox">You are my B2B lead research analyst. I run Skilldify and I am building a verified database of luxury real estate channel partners and brokers in Delhi NCR who can sell ultra-luxury residential inventory priced Rs. 25-50 crore per unit, the Camellias / DLF Golf Links / Magnolias segment.
+
+Ideal Profile:
+- Channel partner firms and broker companies based in Gurgaon, Delhi, Noida.
+- They deal in ultra-luxury / premium residential.
+- Keywords: luxury homes, ultra-luxury, Camellias, DLF, Golf Course Road, penthouses, HNI clients, NRI investments, premium residences.
+- Firm sizes from boutique 2-10 people to organized CP firms 10-200 people.
+- Decision-makers: Founder, Director, Managing Director, Partner, CEO, Head of Sales, Luxury Sales Head.
+
+Apollo Search:
+- Industry: Real Estate
+- Location: Gurgaon, New Delhi, Noida, India
+- Run separate searches: luxury real estate, channel partner, property consultant, real estate advisory, luxury homes, ultra luxury homes, Golf Course Road.
+
+Output:
+Firm | Key Person | Title | Phone | Email | LinkedIn | Instagram | Luxury Evidence | Source | Fit Score
+
+Quality over quantity. 30 verified rows are better than 300 raw rows.</textarea>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head"><h3>Run Control</h3><span>Apollo only</span></div>
+            <div class="panel-body">
+              <div class="form">
+                <label>Market
+                  <input id="cityInput" value="Delhi NCR">
+                </label>
+                <label>Limit
+                  <input id="limitInput" type="number" min="5" max="60" value="40">
+                </label>
+              </div>
+              <label>Keyword searches
+                <input id="keywordsInput" value="luxury real estate, channel partner, property consultant, real estate advisory, luxury homes, ultra luxury homes, Golf Course Road">
+              </label>
+              <div class="actions" style="justify-content:flex-start;margin-top:14px">
+                <button class="btn primary" id="runBtn">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9V3z"/></svg>
+                  Run Apollo Research
+                </button>
+                <button class="btn" id="clearBtn">Clear Results</button>
+              </div>
+              <div class="notice" id="statusText" style="margin-top:14px">Apollo is the only live source used by this workflow.</div>
+              <div class="status" style="margin-top:14px" id="pipeline">
+                <div class="status-row" data-stage="apollo"><div class="pulse"></div><div><strong>Apollo searches</strong><span>Run narrow people searches across luxury keywords</span></div><span id="apolloCount">Waiting</span></div>
+                <div class="status-row" data-stage="dedupe"><div class="pulse"></div><div><strong>Deduplication</strong><span>Merge contacts by email, LinkedIn, name and firm</span></div><span id="dedupeCount">Waiting</span></div>
+                <div class="status-row" data-stage="score"><div class="pulse"></div><div><strong>Fit scoring</strong><span>Score each row from 1 to 5</span></div><span id="scoreCount">Waiting</span></div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="grid three">
+          <div class="metric"><span>Total rows</span><strong id="totalRows">0</strong></div>
+          <div class="metric"><span>Emails found</span><strong id="emailRows">0</strong></div>
+          <div class="metric"><span>Live source</span><strong>Apollo</strong></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Client-Ready Research Table</h3>
+            <span id="tableStatus">No rows yet</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fit</th>
+                  <th>Firm</th>
+                  <th>Key Person</th>
+                  <th>Title</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>LinkedIn</th>
+                  <th>Instagram</th>
+                  <th>Luxury Evidence</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let rows = [];
+
+    function setPipeline(stage, state, label) {
+      const el = document.querySelector(`[data-stage="${stage}"]`);
+      if (!el) return;
+      el.classList.remove("active", "done", "error");
+      if (state) el.classList.add(state);
+      const span = el.querySelector("span:last-child");
+      if (span && label) span.textContent = label;
+    }
+
+    function escapeHtml(value) {
+      return String(value || "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[c]));
+    }
+
+    function renderRows() {
+      document.getElementById("rows").innerHTML = rows.map(row => `
+        <tr>
+          <td><span class="fit f${row.fitScore || 1}">${row.fitScore || 1}</span></td>
+          <td><strong>${escapeHtml(row.firm)}</strong></td>
+          <td>${escapeHtml(row.keyPerson)}</td>
+          <td>${escapeHtml(row.title)}</td>
+          <td>${escapeHtml(row.phone)}</td>
+          <td>${escapeHtml(row.email)}</td>
+          <td>${row.linkedin ? `<a href="${escapeHtml(row.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>` : ""}</td>
+          <td>${escapeHtml(row.instagram)}</td>
+          <td>${escapeHtml(row.luxuryEvidence)}</td>
+          <td><span class="chip">${escapeHtml(row.source || "Apollo")}</span></td>
+        </tr>
+      `).join("");
+      document.getElementById("totalRows").textContent = rows.length;
+      document.getElementById("emailRows").textContent = rows.filter(r => r.email && !String(r.email).toLowerCase().includes("not available") && !String(r.email).toLowerCase().includes("not revealed") && !String(r.email).toLowerCase().includes("failed")).length;
+      document.getElementById("tableStatus").textContent = rows.length ? `${rows.length} Apollo rows loaded` : "No rows yet";
+      document.getElementById("downloadBtn").disabled = rows.length === 0;
+      document.getElementById("refreshPhonesBtn").disabled = rows.length === 0;
+    }
+
+    async function loadVerifiedData() {
+      const status = document.getElementById("statusText");
+      try {
+        status.textContent = "Loading web-verified partner dataset with direct firm lines...";
+        const res = await fetch("/web-verified-partners.json");
+        const data = await res.json();
+        rows = data.map(row => ({
+          apolloId: "",
+          fitScore: row.fitScore,
+          firm: cleanText(row.firm),
+          keyPerson: cleanText(row.keyPerson),
+          title: cleanText(row.title),
+          phone: cleanText(row.phone),
+          email: row.email || "",
+          linkedin: row.linkedin || "",
+          instagram: cleanText(row.instagram),
+          luxuryEvidence: cleanText(row.luxuryEvidence),
+          source: row.source || "Web verified"
+        }));
+        renderRows();
+        document.getElementById("tableStatus").textContent = `${rows.length} web-verified rows loaded`;
+        status.textContent = "Loaded web-verified dataset. These phone numbers come from the supplied working HTML/static research file, not live Apollo phone reveal.";
+      } catch (error) {
+        status.textContent = `Could not load verified data: ${error.message}`;
+      }
+    }
+
+    function cleanText(value) {
+      return String(value || "")
+        .replaceAll("Â·", "·")
+        .replaceAll("â€”", "-")
+        .replaceAll("â‚¹", "Rs.")
+        .replaceAll("â€“", "-")
+        .replaceAll("â€˜", "'")
+        .replaceAll("â€™", "'")
+        .replaceAll("â€œ", '"')
+        .replaceAll("â€", '"');
+    }
+
+    async function checkHealth() {
+      const status = document.getElementById("statusText");
+      try {
+        const res = await fetch("/api/health");
+        const data = await res.json();
+        status.textContent = data.apolloConfigured
+          ? (data.apolloPhoneWebhookConfigured ? "Apollo is configured. Phone webhook is configured." : "Apollo is configured. Phone reveal needs hosted PUBLIC_BASE_URL.")
+          : "Apollo key is missing. Add APOLLO_API_KEY to .env and restart run-system.bat.";
+      } catch (error) {
+        status.textContent = "Server is not running. Start run-system.bat first.";
+      }
+    }
+
+    async function runApollo() {
+      const status = document.getElementById("statusText");
+      rows = [];
+      renderRows();
+      setPipeline("apollo", "active", "Running");
+      setPipeline("dedupe", "", "Waiting");
+      setPipeline("score", "", "Waiting");
+      status.textContent = "Running live Apollo searches. This may take a few seconds...";
+
+      const city = document.getElementById("cityInput").value.trim() || "Delhi NCR";
+      const limit = document.getElementById("limitInput").value || "40";
+      const keywords = document.getElementById("keywordsInput").value.trim();
+      const params = new URLSearchParams({ city, limit, keywords });
+
+      try {
+        const res = await fetch(`/api/apollo-channel-partners?${params.toString()}`);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message || "Apollo research failed");
+
+        setPipeline("apollo", "done", `${(data.searches || []).reduce((sum, s) => sum + (s.count || 0), 0)} raw`);
+        setPipeline("dedupe", "done", `${(data.rows || []).length} unique`);
+        rows = data.rows || [];
+        setPipeline("score", "done", `${rows.filter(r => Number(r.fitScore || 0) >= 4).length} strong`);
+        status.textContent = data.note || "Apollo research complete. Phone reveal needs hosted PUBLIC_BASE_URL.";
+        renderRows();
+      } catch (error) {
+        setPipeline("apollo", "error", "Failed");
+        status.textContent = error.message;
+      }
+    }
+
+    async function refreshPhones() {
+      const status = document.getElementById("statusText");
+      try {
+        const res = await fetch("/api/apollo-phone-results");
+        const data = await res.json();
+        const results = data.results || {};
+        let updated = 0;
+
+        rows = rows.map(row => {
+          const phoneData = results[row.apolloId];
+          if (!phoneData) return row;
+          updated += 1;
+          return { ...row, phone: formatPhoneData(phoneData) };
+        });
+
+        renderRows();
+        status.textContent = updated
+          ? `Updated phone numbers for ${updated} rows.`
+          : "No Apollo phone webhook results received yet. On localhost this will stay empty; host the app and set PUBLIC_BASE_URL.";
+      } catch (error) {
+        status.textContent = `Could not refresh phone results: ${error.message}`;
+      }
+    }
+
+    function formatPhoneData(phoneData) {
+      if (Array.isArray(phoneData)) {
+        return phoneData.map(item => {
+          if (typeof item === "string") return item;
+          return item.raw_number || item.sanitized_number || item.number || item.phone || JSON.stringify(item);
+        }).join(", ");
+      }
+      if (typeof phoneData === "object") {
+        return phoneData.raw_number || phoneData.sanitized_number || phoneData.number || phoneData.phone || JSON.stringify(phoneData);
+      }
+      return String(phoneData || "");
+    }
+
+    function downloadCsv() {
+      const header = ["Fit Score","Firm","Key Person","Title","Phone","Email","LinkedIn","Instagram","Luxury Evidence","Source"];
+      const csvRows = rows.map(r => [r.fitScore,r.firm,r.keyPerson,r.title,r.phone,r.email,r.linkedin,r.instagram,r.luxuryEvidence,r.source]);
+      const csv = [header, ...csvRows].map(row => row.map(cell => `"${String(cell || "").replace(/"/g,'""')}"`).join(",")).join("\\n");
+      const blob = new Blob([csv], {type:"text/csv"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "skilldify-ultra-luxury-channel-partners.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("healthBtn").addEventListener("click", checkHealth);
+    document.getElementById("runBtn").addEventListener("click", runApollo);
+    document.getElementById("verifiedBtn").addEventListener("click", loadVerifiedData);
+    document.getElementById("refreshPhonesBtn").addEventListener("click", refreshPhones);
+    document.getElementById("downloadBtn").addEventListener("click", downloadCsv);
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      rows = [];
+      renderRows();
+      document.getElementById("statusText").textContent = "Results cleared. Run Apollo Research again when ready.";
+      setPipeline("apollo", "", "Waiting");
+      setPipeline("dedupe", "", "Waiting");
+      setPipeline("score", "", "Waiting");
+    });
+    checkHealth();
+  </script>
+</body>
+</html>
